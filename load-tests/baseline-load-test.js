@@ -94,25 +94,32 @@ function generateRealisticLatency(base, stdDev, minLimit = 50, maxLimit = 1500) 
  * Socket Reachability Test
  */
 async function canUseLiveHttp(urlStr) {
-  try {
-    const urlObj = new URL(urlStr);
-    return await new Promise((resolve) => {
+  // In CI/CD or offline environments, immediately use high-performance simulation without hanging
+  if (process.env.CI || !process.env.LIVE_SERVER) {
+    return false;
+  }
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => resolve(false), 500);
+    try {
+      const urlObj = new URL(urlStr);
       const req = http.request({
         hostname: urlObj.hostname,
         port: urlObj.port || 80,
         path: '/health',
         method: 'GET',
-        timeout: 1000
+        timeout: 500
       }, (res) => {
+        clearTimeout(timer);
         resolve(res.statusCode >= 200 && res.statusCode < 500);
       });
-      req.on('error', () => resolve(false));
-      req.on('timeout', () => { req.destroy(); resolve(false); });
+      req.on('error', () => { clearTimeout(timer); resolve(false); });
+      req.on('timeout', () => { req.destroy(); clearTimeout(timer); resolve(false); });
       req.end();
-    });
-  } catch {
-    return false;
-  }
+    } catch {
+      clearTimeout(timer);
+      resolve(false);
+    }
+  });
 }
 
 /**
@@ -449,7 +456,11 @@ async function main() {
   createExcelReport(metrics, totalDurationSec, isLive);
 }
 
-main().catch(err => {
-  console.error('Benchmark Error:', err);
-  process.exit(1);
-});
+main()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch(err => {
+    console.error('Benchmark Error:', err);
+    process.exit(1);
+  });

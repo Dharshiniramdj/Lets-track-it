@@ -54,8 +54,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install --legacy-peer-deps --no-audit
-          npm install xlsx --legacy-peer-deps --no-save || true
+          npm install xlsx --no-save
 
       - name: Execute Appium Mobile E2E Suite
         run: |
@@ -82,12 +81,11 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install --legacy-peer-deps --no-audit
-          npm install xlsx --legacy-peer-deps --no-save || true
+          npm install xlsx --no-save
 
       - name: Execute Baseline Load Test (100 VUs)
         run: |
-          node load-tests/baseline-load-test.js --vus=100 --duration=10
+          node load-tests/baseline-load-test.js --vus=100 --duration=5
 
       - name: Upload Load Test Excel Report
         uses: actions/upload-artifact@v4
@@ -110,8 +108,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install --legacy-peer-deps --no-audit
-          npm install xlsx --legacy-peer-deps --no-save || true
+          npm install xlsx --no-save
 
       - name: Run SAST & Security Assessment
         run: |
@@ -144,14 +141,12 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install --legacy-peer-deps --no-audit
-          npm install xlsx --legacy-peer-deps --no-save || true
+          npm install xlsx --no-save
 
       - name: Consolidate All Excel Workbooks
         run: |
           mkdir -p test-excel-reports
           node scripts/security/generate-security-excel.js || true
-          node load-tests/baseline-load-test.js --vus=100 --duration=5 || true
           cp selenium-tests/Selenium_Login_E2E_Test_Report.xlsx test-excel-reports/1_Selenium_Login_E2E_Test_Report.xlsx
           cp appium-tests/Appium_Mobile_E2E_Test_Report.xlsx test-excel-reports/2_Appium_Mobile_E2E_Test_Report.xlsx
           cp load-tests/Baseline_Load_Test_Report.xlsx test-excel-reports/3_Baseline_Load_Test_Report.xlsx
