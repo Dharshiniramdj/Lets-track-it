@@ -11,9 +11,19 @@
 
 const path = require('path');
 const fs = require('fs');
-const XLSX = require('c:/personal/Lets Track It/apps/web/node_modules/xlsx');
 
-const OUTPUT_DIR = 'c:/personal/Lets Track It/Vulnerability Test Results';
+let XLSX;
+try {
+  XLSX = require('xlsx');
+} catch {
+  try {
+    XLSX = require(path.resolve(__dirname, '../../apps/web/node_modules/xlsx'));
+  } catch {
+    XLSX = require(path.resolve(__dirname, '../../node_modules/xlsx'));
+  }
+}
+
+const OUTPUT_DIR = path.resolve(__dirname, '../../Vulnerability Test Results');
 
 // ============================================================================
 // 1. ENDPOINT INVENTORY DATA

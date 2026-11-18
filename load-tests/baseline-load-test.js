@@ -205,8 +205,16 @@ function computePercentiles(arr) {
 function createExcelReport(metrics, totalDurationSec, isLiveMode) {
   let XLSX;
   try {
-    XLSX = require('c:/personal/Lets Track It/apps/web/node_modules/xlsx');
-  } catch (e) {
+    XLSX = require('xlsx');
+  } catch {
+    try {
+      XLSX = require(path.resolve(__dirname, '../apps/web/node_modules/xlsx'));
+    } catch {
+      XLSX = require(path.resolve(__dirname, '../node_modules/xlsx'));
+    }
+  }
+
+  if (!XLSX) {
     console.warn('[Warning] xlsx package not found, skipping Excel generation');
     return;
   }
@@ -345,7 +353,7 @@ function createExcelReport(metrics, totalDurationSec, isLiveMode) {
   XLSX.utils.book_append_sheet(wb, wsTime, 'Traffic Timeline');
 
   // Write Excel file
-  const reportPath = 'c:/personal/Lets Track It/load-tests/Baseline_Load_Test_Report.xlsx';
+  const reportPath = path.resolve(__dirname, 'Baseline_Load_Test_Report.xlsx');
   XLSX.writeFile(wb, reportPath);
   console.log(`\n📊 Excel Performance Report Generated:`);
   console.log(`   ${reportPath}`);
