@@ -1,0 +1,183 @@
+// Prisma Schema for "Let's Track It" Enterprise Database
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  SUSPENDED
+}
+
+enum AccountType {
+  PERSONAL
+  FAMILY
+  BUSINESS
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+}
+
+enum PaymentMode {
+  UPI
+  CASH
+  CARD
+  NET_BANKING
+  OTHER
+}
+
+enum DeliveryStatus {
+  ORDERED
+  SHIPPED
+  DELIVERED
+  RETURNED
+}
+
+model User {
+  id                  String             @id @default(uuid())
+  email               String             @unique
+  fullName            String
+  passwordHash        String
+  currencyPreference  String             @default("INR") // INR, USD, EUR, etc.
+  status              UserStatus         @default(PENDING_VERIFICATION)
+  biometricPublicKey  String?            // Public key for biometric authentication
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  accounts            AccountMember[]
+  refreshTokens       RefreshToken[]
+  otps                OtpToken[]
+  passwordResetTokens PasswordResetToken[]
+  notifications       Notification[]
+}
+
+model Account {
+  id           String          @id @default(uuid())
+  name         String
+  type         AccountType     @default(PERSONAL)
+  color        String          @default("#6366f1")
+  avatarSeed   String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  members      AccountMember[]
+  transactions Transaction[]
+  goals        SavingsGoal[]
+}
+
+model AccountMember {
+  id        String   @id @default(uuid())
+  userId    String
+  accountId String
+  role      String   @default("OWNER") // OWNER, MEMBER, VIEWER
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, accountId])
+}
+
+model Transaction {
+  id              String           @id @default(uuid())
+  accountId       String
+  amount          Float
+  type            TransactionType
+  mode            PaymentMode
+  platform        String           // e.g., Amazon, Zepto, Blinkit, UPI, GPay
+  purpose         String
+  category        String           // e.g., GROCERY, ELECTRONICS, FOOD, BILLS
+  date            DateTime
+  idempotencyKey  String?          @unique
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  account         Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  shoppingDetails ShoppingDetails?
+}
+
+model ShoppingDetails {
+  id            String         @id @default(uuid())
+  transactionId String         @unique
+  appName       String         // e.g., Amazon, Flipkart, Zepto, Blinkit, Instamart
+  productName   String
+  forWhom       String?
+  orderedDate   DateTime
+  deliveryDate  DateTime?
+  status        DeliveryStatus @default(ORDERED)
+  subItems      Json?          // Itemized sub-list
+
+  transaction   Transaction    @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+}
+
+model SavingsGoal {
+  id           String   @id @default(uuid())
+  accountId    String
+  category     String   // e.g., Groceries, Electronics, Dining
+  targetAmount Float    // Monthly budget limit
+  month        String   // YYYY-MM
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  account      Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([accountId, category, month])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model OtpToken {
+  id        String   @id @default(uuid())
+  userId    String
+  codeHash  String
+  type      String   @default("SIGNUP_VERIFICATION") // SIGNUP_VERIFICATION, PASSWORD_RESET
+  attempts  Int      @default(0)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  type      String   @default("info") // info, success, warning, danger
+  category  String   @default("SYSTEM") // TRANSACTION, DELIVERY, BUDGET, SECURITY, SYSTEM
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+}
+

@@ -1,0 +1,48 @@
+ 
+# Dependencies
+node_modules/
+**/node_modules/
+.tools/
+node.cmd
+npm.cmd
+npx.cmd
+
+# Expo / React Native
+.expo/
+.expo-shared/
+dist/
+build/
+web-build/
+android/.gradle/
+android/build/
+ios/Pods/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.keystore
+*.jks
+google-services.json
+GoogleService-Info.plist
+
+# Logs and temporary files
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+coverage/
+.cache/
+tmp/
+temp/
+
+# Local backups and archives
+mobile-backup/
+**/mobile-backup/
+*.bak
+*.zip
+
+# Keep source code, test scripts, workflows, test reports,
+# package.json and package-lock.json tracked.

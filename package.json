@@ -1,0 +1,38 @@
+{
+  "name": "lets-track-it-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Let's Track It — The Unified Purchases, Payments & Deliveries Hub",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "start:backend": "npm --prefix apps/backend run start",
+    "dev:backend": "npm --prefix apps/backend run dev",
+    "build:backend": "npm --prefix apps/backend run build",
+    "test:backend": "npm --prefix apps/backend run test",
+    "test:backend:coverage": "npm --prefix apps/backend run test:coverage",
+    "start:web": "npm --prefix apps/web run dev",
+    "build:web": "npm --prefix apps/web run build",
+    "start:mobile": "npm --prefix apps/mobile run start",
+    "test:api": "npm --prefix tests/api run test",
+    "test:selenium": "node selenium-tests/tests/login-tests.js",
+    "test:appium": "node appium-tests/tests/mobile-e2e-tests.js",
+    "test:load": "node load-tests/baseline-load-test.js --vus=100 --duration=60",
+    "test:load:quick": "node load-tests/baseline-load-test.js --vus=100 --duration=10",
+    "test:security:matrix": "node scripts/security/generate-security-excel.js",
+    "test:security": "npm --prefix tests/security run test",
+    "test:all-reports": "node selenium-tests/tests/login-tests.js && node appium-tests/tests/mobile-e2e-tests.js && node load-tests/baseline-load-test.js --vus=100 --duration=10 && node scripts/security/generate-security-excel.js",
+    "test:all": "npm run test:backend && npm run test:api && npm run test:selenium && npm run test:appium && npm run test:security"
+  },
+  "keywords": [
+    "personal-finance",
+    "deliveries",
+    "payments",
+    "gemini",
+    "react-native",
+    "fastify"
+  ],
+  "author": "Google DeepMind Advanced Agentic Coding",
+  "license": "UNLICENSED"
+}

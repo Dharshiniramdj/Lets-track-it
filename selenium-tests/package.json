@@ -1,0 +1,28 @@
+{
+  "name": "@letstrackit/selenium-tests",
+  "version": "1.0.0",
+  "description": "Selenium WebDriver E2E Automation Testing Suite for Let's Track It Web Frontend",
+  "main": "tests/login-tests.js",
+  "scripts": {
+    "test": "node tests/login-tests.js",
+    "test:headless": "cross-env HEADLESS=true node tests/login-tests.js",
+    "test:chrome": "cross-env BROWSER=chrome HEADLESS=true node tests/login-tests.js",
+    "test:firefox": "cross-env BROWSER=firefox HEADLESS=true node tests/login-tests.js",
+    "test:edge": "cross-env BROWSER=edge HEADLESS=true node tests/login-tests.js"
+  },
+  "keywords": [
+    "selenium",
+    "webdriver",
+    "e2e",
+    "testing",
+    "login",
+    "automation",
+    "letstrackit"
+  ],
+  "author": "Let's Track It Quality Engineering",
+  "license": "ISC",
+  "dependencies": {
+    "selenium-webdriver": "^4.22.0",
+    "xlsx": "^0.18.5"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@letstrackit/load-tests",
+  "version": "1.0.0",
+  "description": "Baseline & Load Testing Suite for Let's Track It API Server (100 VUs / 1 min)",
+  "main": "baseline-load-test.js",
+  "scripts": {
+    "test:load": "node baseline-load-test.js",
+    "test:load:quick": "node baseline-load-test.js --vus=50 --duration=10",
+    "test:load:100vus": "node baseline-load-test.js --vus=100 --duration=60",
+    "test:load:stress": "node baseline-load-test.js --vus=250 --duration=60"
+  },
+  "keywords": [
+    "load-test",
+    "benchmark",
+    "performance",
+    "rps",
+    "latency",
+    "concurrency",
+    "letstrackit"
+  ],
+  "author": "Let's Track It Performance Engineering",
+  "license": "ISC"
+}

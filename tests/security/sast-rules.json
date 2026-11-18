@@ -1,0 +1,35 @@
+{
+  "name": "Let's Track It DevSecOps Static Analysis Rules",
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "SEC-001",
+      "severity": "CRITICAL",
+      "name": "Hardcoded Secret / API Key Detection",
+      "pattern": "(AIza[0-9A-Za-z-_]{35}|ghp_[0-9A-Za-z]{36}|-----BEGIN PRIVATE KEY-----)",
+      "target": ["apps/mobile/**/*", "apps/backend/**/*"]
+    },
+    {
+      "id": "SEC-002",
+      "severity": "HIGH",
+      "name": "Cleartext HTTP Usage Detection",
+      "pattern": "http://(?!localhost|127\\.0\\.0\\.1)",
+      "target": ["apps/mobile/**/*"]
+    },
+    {
+      "id": "SEC-003",
+      "severity": "HIGH",
+      "name": "Insecure Random Number Generator Detection",
+      "pattern": "Math\\.random\\(\\)",
+      "exemptions": ["mobile-driver.ts", "offlineQueueStore.ts", "api.service.ts"],
+      "target": ["apps/backend/src/common/encryption/**/*"]
+    },
+    {
+      "id": "SEC-004",
+      "severity": "CRITICAL",
+      "name": "SQL Injection Raw Concatenation Detection",
+      "pattern": "\\$queryRawUnsafe|SELECT .* \\+ req\\.",
+      "target": ["apps/backend/src/**/*"]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Let's Track It",
+  "short_name": "TrackIt",
+  "description": "Confidential, Customizable Personal Finance & Deliveries Management Hub",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#02070A",
+  "theme_color": "#02070A",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f4b8.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f4b8.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "Let's Track It",
+    "slug": "lets-track-it",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#02070A",
+    "splash": {
+      "backgroundColor": "#02070A",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.letstrackit.app"
+    },
+    "android": {
+      "package": "com.letstrackit.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#02070A"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [],
+    "extra": {
+      "eas": {
+        "projectId": "20d5d0c9-872a-40c4-b857-f99d771034c2"
+      }
+    }
+  }
+}
